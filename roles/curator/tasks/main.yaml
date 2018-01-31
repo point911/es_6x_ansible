@@ -1,0 +1,30 @@
+---
+- name: Clone curator ansible repo
+  git:
+    repo: "https://github.com/elastic/curator"
+    dest: "/root/curator"
+    force: yes
+    update: yes
+    version: v5.4.1
+
+- name: Apply config files
+  template:
+    src: config.yml.j2
+    dest: /root/curator/config.yml
+
+- name: Apply config files
+  template:
+    src: delete_shipments.yml.j2
+    dest: /root/curator/delete_shipments.yml
+
+
+- name: Install some dependencies
+  pip:
+    requirements: /root/curator/requirements.txt
+
+- name: Setup cron for clearing stash files
+  cron:
+    name: "Setup cron for rotating stash files"
+    hour: "0"
+    minute: "0"
+    job: "/root/curator/run_curator.py --config /root/curator/config.yml /root/curator/delete_shipments.yml"

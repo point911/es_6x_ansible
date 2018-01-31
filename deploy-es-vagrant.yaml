@@ -1,0 +1,33 @@
+---
+- name: Deploy master elasticsearch node(s)
+  hosts: vagrant-logtrade
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+
+  vars_files:
+    - vars/elasticsearch-vars.yaml
+
+  roles:
+    - { role: elastic.elasticsearch,
+        es_instance_name: "master-node",
+        es_config: {
+          cluster.name: "{{ elasticsearch_cluster_name }}",
+          network.host: "{{ ansible_default_ipv4.address }}",
+          http.port: 9200,
+          transport.tcp.port: 9300,
+          node.data: true,
+          node.master: true,
+          bootstrap.memory_lock: true,
+          discovery.zen.minimum_master_nodes: "{{ elasticsearch_discovery_zen_minimum_master_nodes }}",
+          discovery.zen.ping.unicast.hosts: "{{ ansible_default_ipv4.address }}",
+          thread_pool.bulk.queue_size: 2000,
+          thread_pool.search.queue_size: 10000
+        }
+      }
+    - { role: searchguard }
+    - { role: geerlingguy.kibana }
+    - { role: kibana_plugins }
+    - { role: curator }
+

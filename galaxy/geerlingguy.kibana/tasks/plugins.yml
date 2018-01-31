@@ -1,0 +1,6 @@
+- name: Install x-pack plugin from elastic.co
+  command: >
+    /usr/share/kibana/bin/kibana-plugin install x-pack
+  when: es_enable_xpack|bool == true
+  notify: restart kibana
+

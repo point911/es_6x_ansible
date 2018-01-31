@@ -1,0 +1,40 @@
+- name: Stop Elasticsearch
+  service: name=elasticsearch state=stopped
+
+- name: "Delete xpack.security.enabled: false, will be added in searchguard section"
+  lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    regexp: xpack.security.enabled
+    state: absent
+
+
+- name: Install elasticsearch plugins
+  command: "/usr/share/elasticsearch/bin/elasticsearch-plugin install {{ searchguard_version }} --batch --silent"
+  register: plugin_installed
+  failed_when: "'ERROR' in plugin_installed.stdout"
+  notify: restart elasticsearch
+  environment:
+    ES_PATH_CONF: "/etc/elasticsearch"
+  until: plugin_installed.rc == 0
+  retries: 5
+  delay: 5
+
+- name: Run install demo config for searchguard
+  command: bash -c "bash ./install_demo_configuration.sh -y"
+  args:
+    chdir: /usr/share/elasticsearch/plugins/search-guard-6/tools
+
+- name: Stop Elasticsearch
+  service: name=elasticsearch state=started
+
+- name: Wait for elasticsearch to startup
+  wait_for: host={{es_api_host}} port=9300 delay=10
+
+- name: Wait 15 seconds for the Native Relm to come up
+  pause: seconds=15
+
+- name: Run install demo config for searchguard
+  command: "bash -c \"bash /usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh  --hostname {{es_api_host}}  -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig -icl -key /etc/elasticsearch/kirk-key.pem -cert /etc/elasticsearch/kirk.pem -cacert /etc/elasticsearch/root-ca.pem -nhnv\""
+  args:
+    chdir: /usr/share/elasticsearch/plugins/search-guard-6/tools
+

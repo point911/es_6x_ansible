@@ -1,0 +1,8 @@
+[all:vars]
+ansible_connection=ssh
+ansible_ssh_user=administrator
+
+[master]
+master1 ansible_host=10.10.30.244
+master2 ansible_host=10.10.30.245
+master3 ansible_host=10.10.30.246

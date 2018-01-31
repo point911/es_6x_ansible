@@ -1,0 +1,66 @@
+- name: Install kibana searchguard plugin
+  command: "/usr/share/kibana/bin/kibana-plugin install {{ searchguard_kibana_link }}"
+  register: plugin_installed
+  failed_when: "'ERROR' in plugin_installed.stdout"
+  notify: restart kibana
+  environment:
+    ES_PATH_CONF: "/etc/elasticsearch"
+  until: plugin_installed.rc == 0
+  retries: 5
+  delay: 5
+
+
+- name: Install logtrail  plugin
+  command: "/usr/share/kibana/bin/kibana-plugin install {{ logtrail_kibana_link }}"
+  register: plugin_installed
+  failed_when: "'ERROR' in plugin_installed.stdout"
+  notify: restart kibana
+  environment:
+    ES_PATH_CONF: "/etc/elasticsearch"
+  until: plugin_installed.rc == 0
+  retries: 5
+  delay: 5
+
+
+- name: Copy logtrail config
+  copy:
+    src: logtrail.json
+    dest: /usr/share/kibana/plugins/logtrail/logtrail.json
+    force: yes
+  notify: restart kibana
+
+
+- name: Fix permissions for kibana
+  command: "bash -c \"chown -R kibana.kibana /usr/share/kibana\""
+
+
+- name: "Reset kibana.yml"
+  lineinfile:
+    path: /etc/kibana/kibana.yml
+    regexp: "{{ item }}"
+    state: absent
+  notify: restart kibana
+  with_items:
+    - "xpack.security.enabled:"
+    - "elasticsearch.ssl.verificationMode:"
+    - "elasticsearch.username:"
+    - "elasticsearch.password:"
+    - "elasticsearch.url:"
+
+
+- name: "Update kibana.yml"
+  lineinfile:
+    path: /etc/kibana/kibana.yml
+    line: "{{ item }}"
+    state: present
+    insertafter: EOF
+  notify: restart kibana
+  with_items:
+    - "xpack.security.enabled: false"
+    - "elasticsearch.ssl.verificationMode: none"
+    - "elasticsearch.username: \"admin\""
+    - "elasticsearch.password: \"admin\""
+    - "elasticsearch.url: \"https://{{es_api_host}}:9200\""
+
+
+

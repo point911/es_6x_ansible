@@ -1,0 +1,28 @@
+es_major_version: "6.x"
+es_version: "6.1.2"
+es_enable_xpack: true
+es_templates: true
+es_xpack_features: ["alerting","monitoring","graph","ml"]
+elasticsearch_cluster_name: logtrade-cluster
+elasticsearch_discovery_zen_minimum_master_nodes: 1
+es_heap_size: "{{ (ansible_memtotal_mb / 2) | int }}m"
+es_api_host: "{{ ansible_default_ipv4.address }}"
+
+es_data_dirs: ["/var/lib/elasticsearch"]
+
+es_master_nodes: "10.10.30.244:9300,10.10.30.245:9300,10.10.30.246:9300"
+
+
+es_plugins:
+  - plugin: ingest-geoip
+  - plugin: repository-s3
+
+
+kibana_major_version: "6.x"
+kibana_version: "6.1.1"
+kibana_elasticsearch_url: "http://{{ ansible_default_ipv4.address }}:9200"
+
+
+searchguard_version: "com.floragunn:search-guard-6:6.1.2-20.1"
+searchguard_kibana_link: "https://search.maven.org/remotecontent?filepath=com/floragunn/search-guard-kibana-plugin/6.1.1-8/search-guard-kibana-plugin-6.1.1-8.zip"
+logtrail_kibana_link: "https://github.com/sivasamyk/logtrail/releases/download/v0.1.25/logtrail-6.1.1-0.1.25.zip"
