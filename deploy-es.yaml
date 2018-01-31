@@ -1,40 +1,40 @@
 ---
-#- name: Deploy master elasticsearch node(s)
-#  hosts:
-#    - master1
-#    - master2
-#    - master3
-#  become: yes
-#  become_method: sudo
-#  become_user: root
-#  gather_facts: yes
-#
-#  vars_files:
-#    - vars/elasticsearch-vars.yaml
-#
-#
-#  roles:
-#    - { role: elastic.elasticsearch,
-#        es_instance_name: "master-node",
-#        es_templates: false,
-#        es_config: {
-#          cluster.name: "{{ elasticsearch_cluster_name }}",
-#          network.host: "{{ ansible_default_ipv4.address }}",
-#          http.port: 9200,
-#          transport.tcp.port: 9300,
-#          node.data: true,
-#          node.master: true,
-#          bootstrap.memory_lock: true,
-#          discovery.zen.minimum_master_nodes: "2",
-#          discovery.zen.ping.unicast.hosts: "{{ es_master_nodes }}",
-#          thread_pool.bulk.queue_size: 2000,
-#          thread_pool.search.queue_size: 10000,
-#          gateway.recover_after_nodes: "2",
-#          gateway.recover_after_time: "180m",
-#          gateway.expected_nodes: "3"
-#        }
-#      }
-#    - { role: searchguard }
+- name: Deploy master elasticsearch node(s)
+  hosts:
+    - master1
+    - master2
+    - master3
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+
+  vars_files:
+    - vars/elasticsearch-vars.yaml
+
+
+  roles:
+    - { role: elastic.elasticsearch,
+        es_instance_name: "master-node",
+        es_templates: false,
+        es_config: {
+          cluster.name: "{{ elasticsearch_cluster_name }}",
+          network.host: "{{ ansible_default_ipv4.address }}",
+          http.port: 9200,
+          transport.tcp.port: 9300,
+          node.data: true,
+          node.master: true,
+          bootstrap.memory_lock: true,
+          discovery.zen.minimum_master_nodes: "2",
+          discovery.zen.ping.unicast.hosts: "{{ es_master_nodes }}",
+          thread_pool.bulk.queue_size: 2000,
+          thread_pool.search.queue_size: 10000,
+          gateway.recover_after_nodes: "2",
+          gateway.recover_after_time: "180m",
+          gateway.expected_nodes: "3"
+        }
+      }
+    - { role: searchguard }
 
 
 - name: Deploy master elasticsearch node(s)
