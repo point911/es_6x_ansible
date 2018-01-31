@@ -1,3 +1,10 @@
+# NOTE: SHOULD BE EXECUTED ON ES NODE!!!
+- name: Run install demo users for searchguard
+  command: "bash -c \"bash /usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh  --hostname {{es_api_host}}  -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig -icl -key /etc/elasticsearch/kirk-key.pem -cert /etc/elasticsearch/kirk.pem -cacert /etc/elasticsearch/root-ca.pem -nhnv\""
+  args:
+    chdir: /usr/share/elasticsearch/plugins/search-guard-6/tools
+
+
 - name: Install kibana searchguard plugin
   command: "/usr/share/kibana/bin/kibana-plugin install {{ searchguard_kibana_link }}"
   register: plugin_installed
@@ -61,6 +68,3 @@
     - "elasticsearch.username: \"admin\""
     - "elasticsearch.password: \"admin\""
     - "elasticsearch.url: \"https://{{es_api_host}}:9200\""
-
-
-

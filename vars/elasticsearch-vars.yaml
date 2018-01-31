@@ -10,7 +10,7 @@ es_api_host: "{{ ansible_default_ipv4.address }}"
 
 es_data_dirs: ["/var/lib/elasticsearch"]
 
-es_master_nodes: "10.10.30.244:9300,10.10.30.245:9300,10.10.30.246:9300"
+es_master_nodes: "[\"10.10.30.244\", \"10.10.30.245\", \"10.10.30.246\"]"
 
 
 es_plugins:

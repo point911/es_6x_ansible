@@ -33,8 +33,4 @@
 - name: Wait 15 seconds for the Native Relm to come up
   pause: seconds=15
 
-- name: Run install demo config for searchguard
-  command: "bash -c \"bash /usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh  --hostname {{es_api_host}}  -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig -icl -key /etc/elasticsearch/kirk-key.pem -cert /etc/elasticsearch/kirk.pem -cacert /etc/elasticsearch/root-ca.pem -nhnv\""
-  args:
-    chdir: /usr/share/elasticsearch/plugins/search-guard-6/tools
 
