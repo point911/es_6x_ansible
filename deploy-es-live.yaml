@@ -1,0 +1,57 @@
+---
+- name: Deploy master elasticsearch node(s)
+  hosts:
+    - live1
+    - live2
+    - live3
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+
+  vars_files:
+    - vars/elasticsearch-vars-common.yaml
+    - vars/elasticsearch-vars-live.yaml
+
+
+  roles:
+    - { role: elastic.elasticsearch,
+        es_instance_name: "master-node",
+        es_data_dirs: ["/opt/elastic"],
+        es_config: {
+          cluster.name: "{{ elasticsearch_cluster_name }}",
+          network.host: "{{ ansible_default_ipv4.address }}",
+          http.port: 9200,
+          transport.tcp.port: 9300,
+          node.data: true,
+          node.master: true,
+          bootstrap.memory_lock: true,
+          discovery.zen.minimum_master_nodes: "{{ elasticsearch_discovery_zen_minimum_master_nodes }}",
+          discovery.zen.ping.unicast.hosts: "{{ es_master_nodes }}",
+          thread_pool.bulk.queue_size: 2000,
+          thread_pool.search.queue_size: 10000,
+          gateway.recover_after_nodes: "{{ gateway_recover_after_nodes }}",
+          gateway.recover_after_time: "{{ gateway_recover_after_time }}",
+          gateway.expected_nodes: "{{ gateway_expected_nodes }}"
+        }
+      }
+    - { role: searchguard }
+
+
+- name: Deploy master elasticsearch node(s)
+  hosts:
+    - live1
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+
+  vars_files:
+    - vars/elasticsearch-vars-common.yaml
+    - vars/elasticsearch-vars-live.yaml
+
+  roles:
+    - { role: geerlingguy.kibana }
+    - { role: kibana_plugins, es_templates: true  }
+    - { role: curator }
+

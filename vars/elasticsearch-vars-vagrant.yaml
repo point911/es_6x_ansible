@@ -1,0 +1,3 @@
+elasticsearch_cluster_name: logtrade-vagrant-cluster
+elasticsearch_discovery_zen_minimum_master_nodes: 1
+es_master_nodes: "{{ ansible_default_ipv4.address }}"
