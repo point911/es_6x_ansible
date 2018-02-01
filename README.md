@@ -14,6 +14,8 @@
 
 `vagrant destroy  - stops and  delete VM`
 
+`vagrant ssh - ssh into a host`
+
 **How to run without vagrant**
 
-`ansible-playbook deploy-es.yaml --ask-pass --ask-become-pass`
+`ansible-playbook -i inventory/<environment> deploy-es-<environment>.yaml --ask-pass --ask-become-pass`

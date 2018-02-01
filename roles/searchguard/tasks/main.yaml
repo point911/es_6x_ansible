@@ -24,7 +24,7 @@
   args:
     chdir: /usr/share/elasticsearch/plugins/search-guard-6/tools
 
-- name: Stop Elasticsearch
+- name: Start Elasticsearch
   service: name=elasticsearch state=started
 
 - name: Wait for elasticsearch to startup

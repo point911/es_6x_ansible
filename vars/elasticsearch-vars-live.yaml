@@ -1,0 +1,6 @@
+elasticsearch_cluster_name: logtrade-live-cluster
+elasticsearch_discovery_zen_minimum_master_nodes: 2
+gateway_recover_after_nodes: "2"
+gateway_recover_after_time: "180m"
+gateway_expected_nodes: "3"
+es_master_nodes: "[\"10.24.1.11\", \"10.24.1.12\", \"10.24.1.13\"]"

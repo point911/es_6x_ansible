@@ -36,9 +36,10 @@ Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id, "--cpus",   "2"]
   end
 
-  config.vm.provision "shell" do |s|
-    s.inline = "sudo swapoff -a"
-  end
+# Left as a reminder for production
+#  config.vm.provision "shell" do |s|
+#    s.inline = "sudo swapoff -a"
+#  end
 
   config.vm.provision "shell" do |s|
     s.inline = "sudo apt-get update"

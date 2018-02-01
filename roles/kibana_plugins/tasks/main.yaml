@@ -1,8 +1,24 @@
-# NOTE: SHOULD BE EXECUTED ON ES NODE!!!
 - name: Run install demo users for searchguard
   command: "bash -c \"bash /usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh  --hostname {{es_api_host}}  -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig -icl -key /etc/elasticsearch/kirk-key.pem -cert /etc/elasticsearch/kirk.pem -cacert /etc/elasticsearch/root-ca.pem -nhnv\""
   args:
     chdir: /usr/share/elasticsearch/plugins/search-guard-6/tools
+
+
+# Due to that searchguard role is not inegrated into ansible ES playbook need to upload templates once befoer
+- name: Install templates with auth
+  uri:
+    url: "https://{{es_api_host}}:{{es_api_port}}/_template/{{item | filename}}"
+    method: PUT
+    status_code: 200
+    body_format: json
+    body: "{{ lookup('file', item) }}"
+    user: "{{ kibana_es_password }}"
+    password: "{{ kibana_es_username }}"
+    force_basic_auth: yes
+    validate_certs: no
+  when: es_templates
+  with_fileglob:
+    - "files/templates/*.json"
 
 
 - name: Install kibana searchguard plugin
@@ -65,6 +81,6 @@
   with_items:
     - "xpack.security.enabled: false"
     - "elasticsearch.ssl.verificationMode: none"
-    - "elasticsearch.username: \"admin\""
-    - "elasticsearch.password: \"admin\""
-    - "elasticsearch.url: \"https://{{es_api_host}}:9200\""
+    - "elasticsearch.username: \"{{ kibana_es_username }}\""
+    - "elasticsearch.password: \"{{ kibana_es_password }}\""
+    - "elasticsearch.url: \"https://{{es_api_host}}:{{es_api_port}}\""

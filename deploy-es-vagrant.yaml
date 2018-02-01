@@ -7,7 +7,8 @@
   gather_facts: yes
 
   vars_files:
-    - vars/elasticsearch-vars.yaml
+    - vars/elasticsearch-vars-common.yaml
+    - vars/elasticsearch-vars-vagrant.yaml
 
   roles:
     - { role: elastic.elasticsearch,
@@ -21,13 +22,13 @@
           node.master: true,
           bootstrap.memory_lock: true,
           discovery.zen.minimum_master_nodes: "{{ elasticsearch_discovery_zen_minimum_master_nodes }}",
-          discovery.zen.ping.unicast.hosts: "{{ ansible_default_ipv4.address }}",
+          discovery.zen.ping.unicast.hosts: "{{ es_master_nodes }}",
           thread_pool.bulk.queue_size: 2000,
           thread_pool.search.queue_size: 10000
         }
       }
     - { role: searchguard }
     - { role: geerlingguy.kibana }
-    - { role: kibana_plugins }
+    - { role: kibana_plugins, es_templates: true  }
     - { role: curator }
 
