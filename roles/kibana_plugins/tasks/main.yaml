@@ -55,6 +55,7 @@
 
 - name: Fix permissions for kibana
   command: "bash -c \"chown -R kibana.kibana /usr/share/kibana\""
+  notify: restart kibana
 
 
 - name: "Reset kibana.yml"

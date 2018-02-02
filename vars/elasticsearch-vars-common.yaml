@@ -17,7 +17,7 @@ kibana_version: "6.1.2"
 kibana_elasticsearch_url: "http://{{ ansible_default_ipv4.address }}:9200"
 
 searchguard_version: "com.floragunn:search-guard-6:6.1.2-20.1"
-searchguard_kibana_link: "https://search.maven.org/remotecontent?filepath=com/floragunn/search-guard-kibana-plugin/6.1.1-8/search-guard-kibana-plugin-6.1.1-8.zip"
+searchguard_kibana_link: "https://search.maven.org/remotecontent?filepath=com/floragunn/search-guard-kibana-plugin/6.1.2-8/search-guard-kibana-plugin-6.1.2-8.zip"
 logtrail_kibana_link: "https://github.com/sivasamyk/logtrail/releases/download/v0.1.25/logtrail-6.1.2-0.1.25.zip"
 
 kibana_es_username: admin
